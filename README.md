@@ -44,7 +44,7 @@ npm start
 - 6 条虚构人物示例反馈，3 档概念套餐、月付/年付切换、方案说明弹窗。
 - 12 条原生 details/summary FAQ。
 - 中英独立路由、语言偏好 Cookie、刷新保留语言。
-- 明暗主题持久化、键盘焦点、跳到主内容、减少动画支持。
+- 明暗主题持久化、浅色标签对比度修正、键盘焦点、跳到主内容、减少动画支持。
 - 各内容区进入视口动画；无 JavaScript 时内容仍可读。
 - 本地加载骨架、PNG OG 图、favicon、双语元数据、sitemap、robots、WebSite JSON-LD。
 
@@ -88,7 +88,7 @@ tests/                关键行为的桌面与移动自动化验证
 - 根据 Lighthouse 修正演示标题层级与品牌可访问名称。
 - 根据 ESLint 修正主题初始化，避免 effect 中同步 setState。
 
-没有调用其他 AI 模型、真实推理 API 或付费生成服务。浏览器、Playwright、Lighthouse、Git 与 Vercel CLI 是实现和验证工具，不作为 AI 生成工具统计。
+没有调用其他 AI 模型、真实推理 API 或付费生成服务。浏览器、Playwright、Axe、Lighthouse、Git 与 Vercel CLI 是实现和验证工具，不作为 AI 生成工具统计。
 
 ## 自动化测试
 

@@ -748,7 +748,7 @@ ol {
   right: 27px;
   color: var(--muted);
   font-size: 9px;
-  opacity: 0.5;
+  opacity: 1;
 }
 .heading-with-note {
   display: flex;
@@ -2193,4 +2193,16 @@ tbody tr:last-child td {
 }
 :root[data-theme="light"] .button:not(.secondary):hover {
   background: #6842a5;
+}
+:root[data-theme="light"] .popular,
+:root[data-theme="light"] .send-button {
+  color: #fff;
+}
+:root[data-theme="light"] .avatar-1,
+:root[data-theme="light"] .avatar-4 {
+  color: #367966;
+}
+:root[data-theme="light"] .avatar-2,
+:root[data-theme="light"] .avatar-5 {
+  color: #826144;
 }

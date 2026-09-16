@@ -1,3 +1,4 @@
+import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "@playwright/test";
 test("both languages render semantic content without overflow", async ({
   page,
@@ -113,7 +114,14 @@ test("unknown locale is a genuine 404", async ({ request }) => {
 test("mobile navigation closes after selection and supports Escape", async ({
   page,
 }, testInfo) => {
-  if (testInfo.project.name !== "mobile") return;
+  if (testInfo.project.name !== "mobile") {
+    await page.goto("/en");
+    await expect(page.locator(".desktop-nav")).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Navigation menu" }),
+    ).not.toBeVisible();
+    return;
+  }
   await page.goto("/en");
   await page.getByRole("button", { name: "Navigation menu" }).click();
   await expect(page.locator("#mobile-nav")).toBeVisible();
@@ -128,4 +136,52 @@ test("mobile navigation closes after selection and supports Escape", async ({
   await expect(
     page.getByRole("button", { name: "Navigation menu" }),
   ).toBeFocused();
+});
+
+test("SEO endpoints and social image use the published domain", async ({
+  request,
+  page,
+}) => {
+  const sitemap = await request.get("/sitemap.xml");
+  expect(sitemap.status()).toBe(200);
+  expect(await sitemap.text()).toContain(
+    "https://luma-ai-landing-gold.vercel.app/en",
+  );
+  const robots = await request.get("/robots.txt");
+  expect(await robots.text()).toContain(
+    "https://luma-ai-landing-gold.vercel.app/sitemap.xml",
+  );
+  const image = await request.get("/og.png");
+  expect(image.status()).toBe(200);
+  expect(image.headers()["content-type"]).toContain("image/png");
+  await page.goto("/en");
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    "href",
+    "https://luma-ai-landing-gold.vercel.app/en",
+  );
+});
+
+test("both themes and plan dialogs meet WCAG AA checks", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/en");
+  const audit = async () => {
+    const result = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21a", "wcag21aa"])
+      .analyze();
+    expect(
+      result.violations.map((v) => ({
+        id: v.id,
+        nodes: v.nodes.map((n) => n.html),
+      })),
+    ).toEqual([]);
+  };
+  await audit();
+  await page.getByRole("button", { name: "Toggle color theme" }).click();
+  await audit();
+  await page
+    .locator(".price-card")
+    .nth(1)
+    .getByRole("button", { name: "Explore plan" })
+    .click();
+  await audit();
 });

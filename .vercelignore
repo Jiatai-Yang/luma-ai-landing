@@ -1,0 +1,12 @@
+node_modules/
+.git/
+.next/
+.vercel/
+.env*
+docs/lighthouse/
+docs/*.report.*
+test-results/
+playwright-report/
+tests/
+scripts/
+.github/
