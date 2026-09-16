@@ -1,0 +1,84 @@
+{
+  "site": "https://luma-ai-landing-gold.vercel.app",
+  "mode": "Mobile Lighthouse default simulated throttling; serial runs; fresh browser storage",
+  "routes": {
+    "zh": {
+      "testedAt": [
+        "2026-09-16T13:53:46.754Z",
+        "2026-09-16T13:53:59.272Z",
+        "2026-09-16T13:54:12.491Z"
+      ],
+      "runs": [
+        {
+          "performance": 100,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100
+        },
+        {
+          "performance": 96,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100
+        },
+        {
+          "performance": 99,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100
+        }
+      ],
+      "median": {
+        "performance": 99,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "medianMetrics": {
+        "first-contentful-paint": 1098.535,
+        "largest-contentful-paint": 1531.4070000000002,
+        "total-blocking-time": 8.5,
+        "cumulative-layout-shift": 0
+      }
+    },
+    "en": {
+      "testedAt": [
+        "2026-09-16T13:54:24.872Z",
+        "2026-09-16T13:54:37.614Z",
+        "2026-09-16T13:54:49.410Z"
+      ],
+      "runs": [
+        {
+          "performance": 97,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100
+        },
+        {
+          "performance": 100,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 100
+        },
+        {
+          "performance": 98,
+          "accessibility": 100,
+          "best-practices": 100,
+          "seo": 92
+        }
+      ],
+      "median": {
+        "performance": 98,
+        "accessibility": 100,
+        "best-practices": 100,
+        "seo": 100
+      },
+      "medianMetrics": {
+        "first-contentful-paint": 1013.452,
+        "largest-contentful-paint": 1787,
+        "total-blocking-time": 57,
+        "cumulative-layout-shift": 0
+      }
+    }
+  }
+}

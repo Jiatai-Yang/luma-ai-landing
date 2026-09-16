@@ -76,6 +76,8 @@ tests/                关键行为的桌面与移动自动化验证
 
 ## 用了哪些 AI 工具，如何使用
 
+页面实现、文案、工程取舍和验证由 Codex 执行；用户完成 GitHub/Vercel 登录与部署账号授权。以下记录描述实际实施过程。
+
 本项目实际使用 **Codex**：任务拆解、双语内容初稿、React 组件实现、TypeScript 与 ESLint 问题排查、终端构建测试、浏览器视觉检查以及部署操作。
 
 实施中主动判断与修改：
@@ -112,7 +114,14 @@ npx playwright install chromium
 
 ## Lighthouse
 
-使用生产构建、移动端默认模拟配置。每种语言最终执行三次，记录中位数。分数属于具体测试条件下的实验室结果，不代表所有设备和网络。报告与测试时间见验证文档。
+使用 Vercel 正式页面、移动端默认模拟配置。每种语言执行三次，串行测量，中位数如下。
+
+| 页面 | Performance | Accessibility | Best Practices | SEO | LCP | TBT | CLS |
+|---|---:|---:|---:|---:|---:|---:|---:|
+| 中文 /zh | 99 | 100 | 100 | 100 | 1.53s | 8.5ms | 0 |
+| English /en | 98 | 100 | 100 | 100 | 1.79s | 57.0ms | 0 |
+
+22/22 线上行为与 Axe 自动化检查通过。全部六次 Performance / SEO 均为 90+；英文第三次 SEO 为 92（robots 抓取超时），完整保留原始报告。分数属于具体测试条件下的实验室结果，不代表所有设备和网络。报告与测试时间见 [验证文档](docs/verification.md)、[中位数汇总](docs/lighthouse/summary.json) 与 [六份原始报告](docs/lighthouse)。
 
 本地命令示例（macOS）：
 
