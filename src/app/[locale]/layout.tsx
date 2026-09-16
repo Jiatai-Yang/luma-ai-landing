@@ -1,8 +1,70 @@
-import type { Metadata } from 'next';
-import { notFound } from 'next/navigation';
-import '../globals.css';
-export function generateStaticParams(){return [{locale:'zh'},{locale:'en'}];}
-export const dynamicParams=false;
-export async function generateMetadata({params}:{params:Promise<{locale:string}>}):Promise<Metadata>{const {locale}=await params;const zh=locale==='zh';const origin=process.env.NEXT_PUBLIC_SITE_URL || 'https://luma-ai.vercel.app';return {metadataBase:new URL(origin),title:zh?'Luma AI — 让想法迈出下一步':'Luma AI — Give your idea its next step',description:zh?'探索 Luma AI 概念工作助手的写作、编程、教育、客服和数据分析场景。24 个具体任务，双语交互演示与清晰的使用流程。':'Explore a concept AI workspace for writing, code, education, support and analysis. 24 practical use cases, bilingual demos and a clear workflow.',alternates:{canonical:`/${locale}`,languages:{'zh-CN':'/zh',en:'/en','x-default':'/zh'}},openGraph:{type:'website',siteName:'Luma AI',locale:zh?'zh_CN':'en_US',url:`/${locale}`,images:[{url:'/og.png',width:1200,height:630,alt:'Luma AI — Ideas in motion'}]},twitter:{card:'summary_large_image',images:['/og.png']},robots:{index:true,follow:true}};}
-const themeScript="try{var t=localStorage.getItem('luma-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){}";
-export default async function Layout({children,params}:{children:React.ReactNode;params:Promise<{locale:string}>}){const {locale}=await params;if(locale!=='zh'&&locale!=='en')notFound();return <html lang={locale==='zh'?'zh-CN':'en'} data-theme="dark" suppressHydrationWarning><head><script dangerouslySetInnerHTML={{__html:themeScript}}/></head><body>{children}</body></html>;}
+import type { Metadata } from "next";
+import { notFound } from "next/navigation";
+import "../globals.css";
+export function generateStaticParams() {
+  return [{ locale: "zh" }, { locale: "en" }];
+}
+export const dynamicParams = false;
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const zh = locale === "zh";
+  const origin =
+    process.env.NEXT_PUBLIC_SITE_URL || "https://luma-ai-landing-gold.vercel.app";
+  return {
+    metadataBase: new URL(origin),
+    title: zh
+      ? "Luma AI — 让想法迈出下一步"
+      : "Luma AI — Give your idea its next step",
+    description: zh
+      ? "探索 Luma AI 概念工作助手的写作、编程、教育、客服和数据分析场景。24 个具体任务，双语交互演示与清晰的使用流程。"
+      : "Explore a concept AI workspace for writing, code, education, support and analysis. 24 practical use cases, bilingual demos and a clear workflow.",
+    alternates: {
+      canonical: `/${locale}`,
+      languages: { "zh-CN": "/zh", en: "/en", "x-default": "/zh" },
+    },
+    openGraph: {
+      type: "website",
+      siteName: "Luma AI",
+      locale: zh ? "zh_CN" : "en_US",
+      url: `/${locale}`,
+      images: [
+        {
+          url: "/og.png",
+          width: 1200,
+          height: 630,
+          alt: "Luma AI — Ideas in motion",
+        },
+      ],
+    },
+    twitter: { card: "summary_large_image", images: ["/og.png"] },
+    robots: { index: true, follow: true },
+  };
+}
+const themeScript =
+  "try{var t=localStorage.getItem('luma-theme');document.documentElement.dataset.theme=t==='light'?'light':'dark'}catch(e){}";
+export default async function Layout({
+  children,
+  params,
+}: {
+  children: React.ReactNode;
+  params: Promise<{ locale: string }>;
+}) {
+  const { locale } = await params;
+  if (locale !== "zh" && locale !== "en") notFound();
+  return (
+    <html
+      lang={locale === "zh" ? "zh-CN" : "en"}
+      data-theme="dark"
+      suppressHydrationWarning
+    >
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+      </head>
+      <body>{children}</body>
+    </html>
+  );
+}

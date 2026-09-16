@@ -1,26 +1,568 @@
-'use client';
-import { useEffect, useRef, useState } from 'react';
-import { ArrowUpRight, Check, Copy, Menu, Moon, Send, Sparkles, Sun, X } from 'lucide-react';
-import type { Content, Locale } from '@/content';
-export function SiteControls({ locale, nav }: { locale: Locale; nav: string[] }) {
- const [open,setOpen]=useState(false); const menu=useRef<HTMLButtonElement>(null);
- useEffect(()=>{if(!open)return; const fn=(e:KeyboardEvent)=>{if(e.key==='Escape'){setOpen(false);menu.current?.focus();}};window.addEventListener('keydown',fn);return()=>window.removeEventListener('keydown',fn);},[open]);
- function toggle(){const value=document.documentElement.dataset.theme==='light';document.documentElement.dataset.theme=value?'dark':'light';try{localStorage.setItem('luma-theme',value?'dark':'light');}catch{}}
- const ids=['capabilities','scenarios','workflow','pricing'];
- return <><div className="nav-actions"><a className="language" href={`/${locale==='zh'?'en':'zh'}`} hrefLang={locale==='zh'?'en':'zh'} onClick={()=>{document.cookie=`luma-locale=${locale==='zh'?'en':'zh'};path=/;max-age=31536000;SameSite=Lax`;}}>{locale==='zh'?'EN':'中文'}</a><button className="icon-button" aria-label={locale==='zh'?'切换明暗主题':'Toggle color theme'} onClick={toggle}><Sun size={17} className="theme-sun"/><Moon size={17} className="theme-moon"/></button><a className="button small desktop-cta" href="#demo">{locale==='zh'?'开始探索':'Start exploring'}<ArrowUpRight size={15}/></a><button ref={menu} className="icon-button mobile-toggle" aria-expanded={open} aria-controls="mobile-nav" aria-label={locale==='zh'?'导航菜单':'Navigation menu'} onClick={()=>setOpen(!open)}>{open?<X/>:<Menu/>}</button></div>{open&&<nav id="mobile-nav" className="mobile-nav" aria-label={locale==='zh'?'移动导航':'Mobile navigation'}>{nav.map((n,i)=><a key={n} href={`#${ids[i]}`} onClick={()=>setOpen(false)}>{n}</a>)}</nav>}</>;
+"use client";
+import { useEffect, useRef, useState } from "react";
+import {
+  ArrowUpRight,
+  Check,
+  Copy,
+  Menu,
+  Moon,
+  Send,
+  Sparkles,
+  Sun,
+  X,
+} from "lucide-react";
+import type { Content, Locale } from "@/content";
+export function SiteControls({
+  locale,
+  nav,
+}: {
+  locale: Locale;
+  nav: string[];
+}) {
+  const [open, setOpen] = useState(false);
+  const menu = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (!open) return;
+    const fn = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        setOpen(false);
+        menu.current?.focus();
+      }
+    };
+    window.addEventListener("keydown", fn);
+    return () => window.removeEventListener("keydown", fn);
+  }, [open]);
+  function toggle() {
+    const value = document.documentElement.dataset.theme === "light";
+    document.documentElement.dataset.theme = value ? "dark" : "light";
+    try {
+      localStorage.setItem("luma-theme", value ? "dark" : "light");
+    } catch {}
+  }
+  const ids = ["capabilities", "scenarios", "workflow", "pricing"];
+  return (
+    <>
+      <div className="nav-actions">
+        <a
+          className="language"
+          href={`/${locale === "zh" ? "en" : "zh"}`}
+          hrefLang={locale === "zh" ? "en" : "zh"}
+          onClick={(event) => {
+            event.currentTarget.href += window.location.hash;
+            document.cookie = `luma-locale=${locale === "zh" ? "en" : "zh"};path=/;max-age=31536000;SameSite=Lax`;
+          }}
+        >
+          {locale === "zh" ? "EN" : "中文"}
+        </a>
+        <button
+          className="icon-button"
+          aria-label={locale === "zh" ? "切换明暗主题" : "Toggle color theme"}
+          onClick={toggle}
+        >
+          <Sun size={17} className="theme-sun" />
+          <Moon size={17} className="theme-moon" />
+        </button>
+        <a className="button small desktop-cta" href="#demo">
+          {locale === "zh" ? "开始探索" : "Start exploring"}
+          <ArrowUpRight size={15} />
+        </a>
+        <button
+          ref={menu}
+          className="icon-button mobile-toggle"
+          aria-expanded={open}
+          aria-controls="mobile-nav"
+          aria-label={locale === "zh" ? "导航菜单" : "Navigation menu"}
+          onClick={() => setOpen(!open)}
+        >
+          {open ? <X /> : <Menu />}
+        </button>
+      </div>
+      {open && (
+        <nav
+          id="mobile-nav"
+          className="mobile-nav"
+          aria-label={locale === "zh" ? "移动导航" : "Mobile navigation"}
+        >
+          {nav.map((n, i) => (
+            <a key={n} href={`#${ids[i]}`} onClick={() => setOpen(false)}>
+              {n}
+            </a>
+          ))}
+        </nav>
+      )}
+    </>
+  );
 }
-export function Reveal(){useEffect(()=>{if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;const elements=document.querySelectorAll<HTMLElement>('[data-reveal]');const observer=new IntersectionObserver(entries=>entries.forEach(entry=>{if(entry.isIntersecting){entry.target.classList.add('revealed');observer.unobserve(entry.target);}}),{threshold:.08});elements.forEach(el=>{if(el.getBoundingClientRect().top>innerHeight){el.classList.add('reveal-pending');observer.observe(el);}});return()=>observer.disconnect();},[]);return null;}
+export function Reveal() {
+  useEffect(() => {
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const elements = document.querySelectorAll<HTMLElement>("[data-reveal]");
+    const observer = new IntersectionObserver(
+      (entries) =>
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("revealed");
+            observer.unobserve(entry.target);
+          }
+        }),
+      { threshold: 0.08 },
+    );
+    elements.forEach((el) => {
+      if (el.getBoundingClientRect().top > innerHeight) {
+        el.classList.add("reveal-pending");
+        observer.observe(el);
+      }
+    });
+    return () => observer.disconnect();
+  }, []);
+  return null;
+}
 const samples = {
- zh:[{name:'写作',prompt:'为一款环保随行杯写一段温暖、简洁的产品介绍。',heading:'把日常，装进一点绿意。',body:'晨间的咖啡，午后的茶，和路上的每一口水。双层杯身守住温度，轻巧设计陪你出发。少一个一次性杯子，多一份刚刚好的日常。',note:'发布前请核实材质、保温性能及环保主张。'},{name:'编程',prompt:'解释 debounce 的用途，并给出 TypeScript 示例。',heading:'让高频事件，只触发一次。',body:'function debounce<T extends unknown[]>(\n  fn: (...args: T) => void, delay: number\n) {\n  let timer: ReturnType<typeof setTimeout>;\n  return (...args: T) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}',note:'适合搜索输入；实际使用需测试取消与组件卸载行为。'},{name:'客服',prompt:'根据 7 天未使用可退货政策，回复客户的退货咨询。',heading:'清楚的规则，也可以有温度。',body:'您好，理解您希望办理退货。根据您提供的政策，商品在收到后 7 天内且未使用，可以申请退货。请确认收货日期与商品状态，并通过订单页提交申请，我们会协助您完成后续步骤。',note:'这是假设政策下的示例，请根据真实订单和政策审核。'},{name:'分析',prompt:'示例收入：一月 100，二月 120，三月 114。总结趋势。',heading:'增长之外，也看见变化。',body:'• 二月较一月增长 20%。\n• 三月较二月下降 5%。\n• 三月仍比一月高 14%。\n建议进一步检查渠道、促销与季节性因素；这些是分析方向，并非已验证原因。',note:'单位未提供；请检查原始数据和指标口径。'}],
- en:[{name:'Writing',prompt:'Write a warm, concise introduction for a reusable travel cup.',heading:'A little greener. Every day.',body:'Morning coffee. Afternoon tea. Every sip along the way. A double-wall body keeps your drink comfortable, while a lightweight design goes wherever you do. One less disposable cup. One more thoughtful everyday habit.',note:'Verify materials, thermal performance and environmental claims before publishing.'},{name:'Code',prompt:'Explain debounce and provide a TypeScript example.',heading:'Frequent events. One thoughtful response.',body:'function debounce<T extends unknown[]>(\n  fn: (...args: T) => void, delay: number\n) {\n  let timer: ReturnType<typeof setTimeout>;\n  return (...args: T) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}',note:'Useful for search inputs. Test cancellation and component unmount behavior.'},{name:'Support',prompt:'Draft a reply using a 7-day return policy for unused items.',heading:'Clear policies. A human tone.',body:'Hello, we understand you would like to return your item. Based on the supplied policy, unused items may be returned within 7 days of receipt. Please confirm the delivery date and item condition, then submit a request through your order page so we can help with the next steps.',note:'Illustrative policy only. Verify the actual order and service policy.'},{name:'Analysis',prompt:'Example revenue: January 100, February 120, March 114. Summarize.',heading:'Look beyond the growth.',body:'• February grew 20% over January.\n• March declined 5% from February.\n• March remained 14% above January.\nInvestigate channels, promotions and seasonality. These are research directions, not verified causes.',note:'Units were not supplied. Check source data and metric definitions.'}]
+  zh: [
+    {
+      name: "写作",
+      prompt: "为一款环保随行杯写一段温暖、简洁的产品介绍。",
+      heading: "把日常，装进一点绿意。",
+      body: "晨间的咖啡，午后的茶，和路上的每一口水。双层杯身守住温度，轻巧设计陪你出发。少一个一次性杯子，多一份刚刚好的日常。",
+      note: "发布前请核实材质、保温性能及环保主张。",
+    },
+    {
+      name: "编程",
+      prompt: "解释 debounce 的用途，并给出 TypeScript 示例。",
+      heading: "让高频事件，只触发一次。",
+      body: "function debounce<T extends unknown[]>(\n  fn: (...args: T) => void, delay: number\n) {\n  let timer: ReturnType<typeof setTimeout>;\n  return (...args: T) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}",
+      note: "适合搜索输入；实际使用需测试取消与组件卸载行为。",
+    },
+    {
+      name: "客服",
+      prompt: "根据 7 天未使用可退货政策，回复客户的退货咨询。",
+      heading: "清楚的规则，也可以有温度。",
+      body: "您好，理解您希望办理退货。根据您提供的政策，商品在收到后 7 天内且未使用，可以申请退货。请确认收货日期与商品状态，并通过订单页提交申请，我们会协助您完成后续步骤。",
+      note: "这是假设政策下的示例，请根据真实订单和政策审核。",
+    },
+    {
+      name: "分析",
+      prompt: "示例收入：一月 100，二月 120，三月 114。总结趋势。",
+      heading: "增长之外，也看见变化。",
+      body: "• 二月较一月增长 20%。\n• 三月较二月下降 5%。\n• 三月仍比一月高 14%。\n建议进一步检查渠道、促销与季节性因素；这些是分析方向，并非已验证原因。",
+      note: "单位未提供；请检查原始数据和指标口径。",
+    },
+  ],
+  en: [
+    {
+      name: "Writing",
+      prompt: "Write a warm, concise introduction for a reusable travel cup.",
+      heading: "A little greener. Every day.",
+      body: "Morning coffee. Afternoon tea. Every sip along the way. A double-wall body keeps your drink comfortable, while a lightweight design goes wherever you do. One less disposable cup. One more thoughtful everyday habit.",
+      note: "Verify materials, thermal performance and environmental claims before publishing.",
+    },
+    {
+      name: "Code",
+      prompt: "Explain debounce and provide a TypeScript example.",
+      heading: "Frequent events. One thoughtful response.",
+      body: "function debounce<T extends unknown[]>(\n  fn: (...args: T) => void, delay: number\n) {\n  let timer: ReturnType<typeof setTimeout>;\n  return (...args: T) => {\n    clearTimeout(timer);\n    timer = setTimeout(() => fn(...args), delay);\n  };\n}",
+      note: "Useful for search inputs. Test cancellation and component unmount behavior.",
+    },
+    {
+      name: "Support",
+      prompt: "Draft a reply using a 7-day return policy for unused items.",
+      heading: "Clear policies. A human tone.",
+      body: "Hello, we understand you would like to return your item. Based on the supplied policy, unused items may be returned within 7 days of receipt. Please confirm the delivery date and item condition, then submit a request through your order page so we can help with the next steps.",
+      note: "Illustrative policy only. Verify the actual order and service policy.",
+    },
+    {
+      name: "Analysis",
+      prompt:
+        "Example revenue: January 100, February 120, March 114. Summarize.",
+      heading: "Look beyond the growth.",
+      body: "• February grew 20% over January.\n• March declined 5% from February.\n• March remained 14% above January.\nInvestigate channels, promotions and seasonality. These are research directions, not verified causes.",
+      note: "Units were not supplied. Check source data and metric definitions.",
+    },
+  ],
 };
-export function Demo({locale}:{locale:Locale}){const list=samples[locale];const [tab,setTab]=useState(0);const [prompt,setPrompt]=useState(list[0].prompt);const [result,setResult]=useState(0);const [copied,setCopied]=useState(false);const [status,setStatus]=useState('');
- function choose(i:number){setTab(i);setPrompt(list[i].prompt);setResult(i);setStatus('');setCopied(false);}
- async function copy(){try{await navigator.clipboard.writeText(list[result].body);setCopied(true);}catch{setStatus(locale==='zh'?'复制不可用，请手动选择文本。':'Copy unavailable. Please select the text manually.');}}
- return <div className="demo-window" id="demo"><div className="window-top"><div className="window-dots"><i/><i/><i/></div><span>luma / workspace</span><span className="local-badge"><span/> {locale==='zh'?'本地演示':'Local demo'}</span></div><div className="demo-body"><aside className="demo-sidebar"><div className="mini-logo"><Sparkles size={18}/> Luma</div><span className="sidebar-label">{locale==='zh'?'你的工作空间':'YOUR WORKSPACE'}</span>{list.map((s,i)=><button key={s.name} className={tab===i?'active':''} onClick={()=>choose(i)}><span>0{i+1}</span>{s.name}</button>)}<div className="sidebar-bottom">{locale==='zh'?'一个空间，无限可能。':'One space. More possibilities.'}</div></aside><div className="demo-main"><div className="demo-heading"><span><Sparkles size={15}/> {locale==='zh'?'从一个好问题开始':'Start with a good question'}</span><span className="model-tag">Luma · Preview</span></div><div className="demo-tabs" aria-label={locale==='zh'?'演示类别':'Demo category'}>{list.map((s,i)=><button key={s.name} aria-pressed={tab===i} onClick={()=>choose(i)} className={tab===i?'active':''}>{s.name}</button>)}</div><form onSubmit={e=>{e.preventDefault();setResult(tab);setCopied(false);setStatus(locale==='zh'?'已展示当前类别的预设示例；未调用真实 AI。':'Preset example shown for this category. No live AI was called.');}}><label className="sr-only" htmlFor="prompt">{locale==='zh'?'任务描述':'Task description'}</label><textarea id="prompt" value={prompt} maxLength={1200} onChange={e=>setPrompt(e.target.value)}/><button className="send-button" aria-label={locale==='zh'?'查看示例输出':'View sample output'} type="submit"><Send size={16}/></button></form><div className="ai-result" aria-live="polite"><div className="result-label"><span className="sparkle-box"><Sparkles size={14}/></span> Luma <span>{locale==='zh'?'示例输出':'Sample output'}</span><button className="icon-button" onClick={copy} aria-label={locale==='zh'?'复制结果':'Copy result'}>{copied?<Check size={15}/>:<Copy size={15}/>}</button></div><h3>{list[result].heading}</h3>{result===1?<pre><code>{list[result].body}</code></pre>:<p>{list[result].body}</p>}<div className="result-note"><Check size={13}/>{list[result].note}</div></div><div className="demo-disclaimer" role="status">{status || (locale==='zh'?'预设示例 · 输入仅在本地使用 · 重要成果需人工审核':'Preset examples · Local input only · Review important work')}{copied&&<span> · {locale==='zh'?'已复制':'Copied'}</span>}</div></div></div></div>;
+export function Demo({ locale }: { locale: Locale }) {
+  const list = samples[locale];
+  const [tab, setTab] = useState(0);
+  const [prompt, setPrompt] = useState(list[0].prompt);
+  const [result, setResult] = useState(0);
+  const [copied, setCopied] = useState(false);
+  const [status, setStatus] = useState("");
+  function choose(i: number) {
+    setTab(i);
+    setPrompt(list[i].prompt);
+    setResult(i);
+    setStatus("");
+    setCopied(false);
+  }
+  async function copy() {
+    try {
+      await navigator.clipboard.writeText(list[result].body);
+      setCopied(true);
+    } catch {
+      setStatus(
+        locale === "zh"
+          ? "复制不可用，请手动选择文本。"
+          : "Copy unavailable. Please select the text manually.",
+      );
+    }
+  }
+  return (
+    <div className="demo-window" id="demo">
+      <h2 className="sr-only">
+        {locale === "zh" ? "产品交互演示" : "Interactive product demo"}
+      </h2>
+      <div className="window-top">
+        <div className="window-dots">
+          <i />
+          <i />
+          <i />
+        </div>
+        <span>luma / workspace</span>
+        <span className="local-badge">
+          <span /> {locale === "zh" ? "本地演示" : "Local demo"}
+        </span>
+      </div>
+      <div className="demo-body">
+        <aside className="demo-sidebar">
+          <div className="mini-logo">
+            <Sparkles size={18} /> Luma
+          </div>
+          <span className="sidebar-label">
+            {locale === "zh" ? "你的工作空间" : "YOUR WORKSPACE"}
+          </span>
+          {list.map((s, i) => (
+            <button
+              key={s.name}
+              className={tab === i ? "active" : ""}
+              onClick={() => choose(i)}
+            >
+              <span>0{i + 1}</span>
+              {s.name}
+            </button>
+          ))}
+          <div className="sidebar-bottom">
+            {locale === "zh"
+              ? "一个空间，无限可能。"
+              : "One space. More possibilities."}
+          </div>
+        </aside>
+        <div className="demo-main">
+          <div className="demo-heading">
+            <span>
+              <Sparkles size={15} />{" "}
+              {locale === "zh"
+                ? "从一个好问题开始"
+                : "Start with a good question"}
+            </span>
+            <span className="model-tag">Luma · Preview</span>
+          </div>
+          <div
+            className="demo-tabs"
+            aria-label={locale === "zh" ? "演示类别" : "Demo category"}
+          >
+            {list.map((s, i) => (
+              <button
+                key={s.name}
+                aria-pressed={tab === i}
+                onClick={() => choose(i)}
+                className={tab === i ? "active" : ""}
+              >
+                {s.name}
+              </button>
+            ))}
+          </div>
+          <form
+            onSubmit={(e) => {
+              e.preventDefault();
+              setResult(tab);
+              setCopied(false);
+              setStatus(
+                locale === "zh"
+                  ? "已展示当前类别的预设示例；未调用真实 AI。"
+                  : "Preset example shown for this category. No live AI was called.",
+              );
+            }}
+          >
+            <label className="sr-only" htmlFor="prompt">
+              {locale === "zh" ? "任务描述" : "Task description"}
+            </label>
+            <textarea
+              id="prompt"
+              value={prompt}
+              maxLength={1200}
+              onChange={(e) => setPrompt(e.target.value)}
+            />
+            <button
+              className="send-button"
+              aria-label={
+                locale === "zh" ? "查看示例输出" : "View sample output"
+              }
+              type="submit"
+            >
+              <Send size={16} />
+            </button>
+          </form>
+          <div className="ai-result" aria-live="polite">
+            <div className="result-label">
+              <span className="sparkle-box">
+                <Sparkles size={14} />
+              </span>{" "}
+              Luma <span>{locale === "zh" ? "示例输出" : "Sample output"}</span>
+              <button
+                className="icon-button"
+                onClick={copy}
+                aria-label={locale === "zh" ? "复制结果" : "Copy result"}
+              >
+                {copied ? <Check size={15} /> : <Copy size={15} />}
+              </button>
+            </div>
+            <h3>{list[result].heading}</h3>
+            {result === 1 ? (
+              <pre>
+                <code>{list[result].body}</code>
+              </pre>
+            ) : (
+              <p>{list[result].body}</p>
+            )}
+            <div className="result-note">
+              <Check size={13} />
+              {list[result].note}
+            </div>
+          </div>
+          <div className="demo-disclaimer" role="status">
+            {status ||
+              (locale === "zh"
+                ? "预设示例 · 输入仅在本地使用 · 重要成果需人工审核"
+                : "Preset examples · Local input only · Review important work")}
+            {copied && <span> · {locale === "zh" ? "已复制" : "Copied"}</span>}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
-export function SceneLibrary({content:c}:{content:Content}){const [category,setCategory]=useState(0);return <><div className="filter-row" aria-label={c.zh?'场景分类':'Scenario categories'}>{c.categories.map((n,i)=><button key={n} aria-pressed={category===i} className={category===i?'active':''} onClick={()=>setCategory(i)}>{n}</button>)}</div><p className="scene-count" aria-live="polite">{c.zh?'共':'Showing'} {c.scenes.filter(s=>!category||s.category===category).length} {c.zh?'个场景 · 输入越具体，草稿越有用':'scenarios · Better context, better drafts'}</p><div className="scene-grid">{c.scenes.filter(s=>!category||s.category===category).map((s,i)=><article className="scene-card" key={s.title}><div className="scene-category"><span>{c.categories[s.category]}</span><span>{String(i+1).padStart(2,'0')}</span></div><h3>{s.title}</h3><p>{s.description}</p><dl><dt>{c.zh?'输入':'Input'}</dt><dd>{s.input}</dd><dt>{c.zh?'输出':'Output'}</dt><dd>{s.output}</dd></dl></article>)}</div><p className="section-note">{c.zh?'所有场景均需核实关键事实与结果；AI 提供草稿和分析方向，最终交付由你判断。':'Verify important facts and results in every scenario. AI provides drafts and directions; you make the final call.'}</p></>;}
-export function Pricing({locale}:{locale:Locale}){const zh=locale==='zh';const [annual,setAnnual]=useState(false);const [selected,setSelected]=useState<string|null>(null);const ref=useRef<HTMLDialogElement>(null);
- useEffect(()=>{if(selected)ref.current?.showModal();},[selected]);
- const plans=[{name:'Free',price:0,description:zh?'给好奇心一个起点':'A starting point for curiosity',features:zh?['基础对话与写作','每日 20 次示例额度','基础格式导出','个人工作空间']:['Core chat and writing','20 illustrative daily requests','Basic format export','Personal workspace']},{name:'Pro',price:annual?15:19,description:zh?'让日常工作更进一步':'More momentum for everyday work',features:zh?['Free 的全部功能','更高的使用额度','长上下文与资料辅助','高级结构化输出','优先响应']:['Everything in Free','Higher usage allowance','Long context and reference assistance','Advanced structured output','Priority responses']},{name:'Team',price:annual?29:39,description:zh?'让团队拥有共同上下文':'A shared context for your team',features:zh?['Pro 的全部功能','团队共享工作空间','成员与权限管理','共享模板与资料','统一账单与支持']:['Everything in Pro','Shared team workspaces','Member and access management','Shared templates and references','Central billing and support']}];
- return <><div className="billing-toggle"><button aria-pressed={!annual} onClick={()=>setAnnual(false)} className={!annual?'active':''}>{zh?'月付':'Monthly'}</button><button aria-pressed={annual} onClick={()=>setAnnual(true)} className={annual?'active':''}>{zh?'年付':'Annual'} <span>{zh?'更优惠':'Save more'}</span></button></div><div className="pricing-grid">{plans.map((p,i)=><article className={`price-card ${i===1?'featured':''}`} key={p.name}>{i===1&&<span className="popular">{zh?'推荐方案':'MOST POPULAR'}</span>}<h3>{p.name}</h3><p>{p.description}</p><div className="price"><span>$</span>{p.price}<small>/{zh?'人/月':'user/mo'}</small></div><div className="billing-note">{annual&&p.price?`${zh?'按年计费':'Billed annually'} · $${p.price*12}/${zh?'人/年':'user/year'}`:zh?'示例价格 · 非真实订阅':'Illustrative pricing · No subscription'}</div><button className={`button ${i!==1?'secondary':''}`} onClick={()=>setSelected(p.name)}>{zh?'了解方案':'Explore plan'}<ArrowUpRight size={16}/></button><ul>{p.features.map(f=><li key={f}><Check size={15}/>{f}</li>)}</ul></article>)}</div><p className="section-note">{zh?'套餐及额度为概念产品示例。没有支付、注册或实际订阅。':'Plans and allowances illustrate a concept product. No payments, sign-ups or live subscriptions.'}</p><dialog ref={ref} className="plan-dialog" onClose={()=>setSelected(null)} onClick={e=>{if(e.target===e.currentTarget)ref.current?.close();}}><button className="icon-button dialog-close" onClick={()=>ref.current?.close()} aria-label={zh?'关闭':'Close'}><X/></button><Sparkles className="accent"/><h3>{selected} {zh?'方案预览':'plan preview'}</h3><p>{zh?'这是概念方案，不会创建订阅或收取费用。你可以先体验产品演示，了解它如何辅助工作。':'This is a concept plan. No subscription or charge will be created. Explore the demo to see how the workspace could help.'}</p><a href="#demo" className="button" onClick={()=>ref.current?.close()}>{zh?'体验演示':'Try the demo'}<ArrowUpRight size={16}/></a></dialog></>;}
+export function SceneLibrary({ content: c }: { content: Content }) {
+  const [category, setCategory] = useState(0);
+  return (
+    <>
+      <div
+        className="filter-row"
+        aria-label={c.zh ? "场景分类" : "Scenario categories"}
+      >
+        {c.categories.map((n, i) => (
+          <button
+            key={n}
+            aria-pressed={category === i}
+            className={category === i ? "active" : ""}
+            onClick={() => setCategory(i)}
+          >
+            {n}
+          </button>
+        ))}
+      </div>
+      <p className="scene-count" aria-live="polite">
+        {c.zh ? "共" : "Showing"}{" "}
+        {c.scenes.filter((s) => !category || s.category === category).length}{" "}
+        {c.zh
+          ? "个场景 · 输入越具体，草稿越有用"
+          : "scenarios · Better context, better drafts"}
+      </p>
+      <div className="scene-grid">
+        {c.scenes
+          .filter((s) => !category || s.category === category)
+          .map((s, i) => (
+            <article className="scene-card" key={s.title}>
+              <div className="scene-category">
+                <span>{c.categories[s.category]}</span>
+                <span>{String(i + 1).padStart(2, "0")}</span>
+              </div>
+              <h3>{s.title}</h3>
+              <p>{s.description}</p>
+              <dl>
+                <dt>{c.zh ? "输入" : "Input"}</dt>
+                <dd>{s.input}</dd>
+                <dt>{c.zh ? "输出" : "Output"}</dt>
+                <dd>{s.output}</dd>
+              </dl>
+            </article>
+          ))}
+      </div>
+      <p className="section-note">
+        {c.zh
+          ? "所有场景均需核实关键事实与结果；AI 提供草稿和分析方向，最终交付由你判断。"
+          : "Verify important facts and results in every scenario. AI provides drafts and directions; you make the final call."}
+      </p>
+    </>
+  );
+}
+export function Pricing({ locale }: { locale: Locale }) {
+  const zh = locale === "zh";
+  const [annual, setAnnual] = useState(false);
+  const [selected, setSelected] = useState<string | null>(null);
+  const ref = useRef<HTMLDialogElement>(null);
+  useEffect(() => {
+    if (selected) ref.current?.showModal();
+  }, [selected]);
+  const plans = [
+    {
+      name: "Free",
+      price: 0,
+      description: zh ? "给好奇心一个起点" : "A starting point for curiosity",
+      features: zh
+        ? [
+            "基础对话与写作",
+            "每日 20 次示例额度",
+            "基础格式导出",
+            "个人工作空间",
+          ]
+        : [
+            "Core chat and writing",
+            "20 illustrative daily requests",
+            "Basic format export",
+            "Personal workspace",
+          ],
+    },
+    {
+      name: "Pro",
+      price: annual ? 15 : 19,
+      description: zh
+        ? "让日常工作更进一步"
+        : "More momentum for everyday work",
+      features: zh
+        ? [
+            "Free 的全部功能",
+            "更高的使用额度",
+            "长上下文与资料辅助",
+            "高级结构化输出",
+            "优先响应",
+          ]
+        : [
+            "Everything in Free",
+            "Higher usage allowance",
+            "Long context and reference assistance",
+            "Advanced structured output",
+            "Priority responses",
+          ],
+    },
+    {
+      name: "Team",
+      price: annual ? 29 : 39,
+      description: zh
+        ? "让团队拥有共同上下文"
+        : "A shared context for your team",
+      features: zh
+        ? [
+            "Pro 的全部功能",
+            "团队共享工作空间",
+            "成员与权限管理",
+            "共享模板与资料",
+            "统一账单与支持",
+          ]
+        : [
+            "Everything in Pro",
+            "Shared team workspaces",
+            "Member and access management",
+            "Shared templates and references",
+            "Central billing and support",
+          ],
+    },
+  ];
+  return (
+    <>
+      <div className="billing-toggle">
+        <button
+          aria-pressed={!annual}
+          onClick={() => setAnnual(false)}
+          className={!annual ? "active" : ""}
+        >
+          {zh ? "月付" : "Monthly"}
+        </button>
+        <button
+          aria-pressed={annual}
+          onClick={() => setAnnual(true)}
+          className={annual ? "active" : ""}
+        >
+          {zh ? "年付" : "Annual"} <span>{zh ? "更优惠" : "Save more"}</span>
+        </button>
+      </div>
+      <div className="pricing-grid">
+        {plans.map((p, i) => (
+          <article
+            className={`price-card ${i === 1 ? "featured" : ""}`}
+            key={p.name}
+          >
+            {i === 1 && (
+              <span className="popular">
+                {zh ? "推荐方案" : "MOST POPULAR"}
+              </span>
+            )}
+            <h3>{p.name}</h3>
+            <p>{p.description}</p>
+            <div className="price">
+              <span>$</span>
+              {p.price}
+              <small>/{zh ? "人/月" : "user/mo"}</small>
+            </div>
+            <div className="billing-note">
+              {annual && p.price
+                ? `${zh ? "按年计费" : "Billed annually"} · $${p.price * 12}/${zh ? "人/年" : "user/year"}`
+                : zh
+                  ? "示例价格 · 非真实订阅"
+                  : "Illustrative pricing · No subscription"}
+            </div>
+            <button
+              className={`button ${i !== 1 ? "secondary" : ""}`}
+              onClick={() => setSelected(p.name)}
+            >
+              {zh ? "了解方案" : "Explore plan"}
+              <ArrowUpRight size={16} />
+            </button>
+            <ul>
+              {p.features.map((f) => (
+                <li key={f}>
+                  <Check size={15} />
+                  {f}
+                </li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+      <p className="section-note">
+        {zh
+          ? "套餐及额度为概念产品示例。没有支付、注册或实际订阅。"
+          : "Plans and allowances illustrate a concept product. No payments, sign-ups or live subscriptions."}
+      </p>
+      <dialog
+        ref={ref}
+        className="plan-dialog"
+        aria-labelledby="plan-title"
+        onClose={() => setSelected(null)}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) ref.current?.close();
+        }}
+      >
+        <button
+          className="icon-button dialog-close"
+          onClick={() => ref.current?.close()}
+          aria-label={zh ? "关闭" : "Close"}
+        >
+          <X />
+        </button>
+        <Sparkles className="accent" />
+        <h3 id="plan-title">
+          {selected} {zh ? "方案预览" : "plan preview"}
+        </h3>
+        <p>
+          {zh
+            ? "这是概念方案，不会创建订阅或收取费用。你可以先体验产品演示，了解它如何辅助工作。"
+            : "This is a concept plan. No subscription or charge will be created. Explore the demo to see how the workspace could help."}
+        </p>
+        <a href="#demo" className="button" onClick={() => ref.current?.close()}>
+          {zh ? "体验演示" : "Try the demo"}
+          <ArrowUpRight size={16} />
+        </a>
+      </dialog>
+    </>
+  );
+}

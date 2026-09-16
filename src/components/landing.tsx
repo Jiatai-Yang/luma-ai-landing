@@ -1,22 +1,229 @@
-import Link from 'next/link';
-import { ArrowDown, ArrowRight, ArrowUpRight, BookOpen, Braces, Check, ChevronDown, FileText, Globe2, Layers3, LockKeyhole, Search, ShieldCheck, Sparkles, Workflow, Zap } from 'lucide-react';
-import type { Content, Locale } from '@/content';
-import { Demo, Pricing, Reveal, SceneLibrary, SiteControls } from './interactive';
-import type { ReactNode } from 'react';
-const icons=[FileText,Braces,BookOpen,Search,Globe2,Layers3];
-function Heading({eyebrow,title,description,center=false}:{eyebrow:string;title:string;description?:string;center?:boolean}){return <div className={`section-heading ${center?'center':''}`}><span className="eyebrow"><span/>{eyebrow}</span><h2>{title}</h2>{description&&<p>{description}</p>}</div>;}
-function Section({id,children,className=''}:{id?:string;children:ReactNode;className?:string}){return <section id={id} className={`section ${className}`} data-reveal><div className="container">{children}</div></section>;}
-function FeatureArt({index,zh}:{index:number;zh:boolean}){return <div className={`feature-art art-${index}`} aria-label={zh?'产品功能示意':'Concept feature illustration'}>{index===0?<><div className="context-card"><BookOpen size={18}/><div><strong>{zh?'品牌参考资料':'Brand references'}</strong><span>brand-guide.txt · 2.4 KB</span></div><Check size={15}/></div><div className="context-card"><FileText size={18}/><div><strong>{zh?'任务目标':'Task objective'}</strong><span>{zh?'清晰 · 温暖 · 面向新用户':'Clear · Warm · For new users'}</span></div><Check size={15}/></div><div className="art-connector"/><div className="art-answer"><Sparkles size={21}/><span>{zh?'连接上下文，找到更好的表达。':'Connect context. Find better words.'}</span></div></>:index===1?<><div className="format-tabs"><span className="active">{zh?'文档':'Document'}</span><span>{zh?'表格':'Table'}</span><span>Markdown</span></div><div className="document-preview"><span className="document-tag">DRAFT / 01</span><h4>{zh?'让下一步更清晰':'Make the next step clear'}</h4><div className="fake-line wide"/><div className="fake-line"/><div className="fake-line short"/><div className="document-check"><Check size={15}/>{zh?'明确目标与受众':'Define the goal and audience'}</div><div className="document-check"><Check size={15}/>{zh?'补充关键背景资料':'Add essential context'}</div><div className="document-check"><Check size={15}/>{zh?'审核后交付':'Review before delivery'}</div></div></>:<><div className="shield-orbit"><ShieldCheck size={49}/><span className="orbit-dot one"/><span className="orbit-dot two"/></div><div className="privacy-badges"><span><LockKeyhole size={13}/>{zh?'输入本地处理':'Local demo input'}</span><span><Check size={13}/>{zh?'由你审核':'Your review'}</span></div><p>{zh?'你的判断，是工作流的一部分。':'Your judgment is part of the workflow.'}</p></>}</div>;}
-export function Landing({locale,content:c}:{locale:Locale;content:Content}){const zh=c.zh;const ids=['capabilities','scenarios','workflow','pricing'];return <><a href="#main" className="skip-link">{zh?'跳到主要内容':'Skip to main content'}</a><header className="site-header"><div className="container header-inner"><a href={`/${locale}`} className="brand" aria-label="Luma AI"><span className="brand-mark"><Sparkles size={22}/></span>luma<span className="brand-ai">AI</span></a><nav className="desktop-nav" aria-label={zh?'主导航':'Main navigation'}>{c.nav.map((n,i)=><a key={n} href={`#${ids[i]}`}>{n}</a>)}</nav><SiteControls locale={locale} nav={c.nav}/></div></header><main id="main"><section className="hero"><div className="hero-grid" aria-hidden="true"/><div className="hero-glow glow-one" aria-hidden="true"/><div className="hero-glow glow-two" aria-hidden="true"/><div className="container hero-content"><a href="#features" className="release-badge"><span className="badge-dot"/>{zh?'为想法而生，为行动而来':'Made for ideas. Built for momentum.'}<ArrowRight size={13}/></a><h1>{c.hero[0]}<br/><span>{c.hero[1]}</span></h1><p className="hero-description">{c.hero[2]}</p><div className="hero-actions"><a href="#demo" className="button">{c.cta}<ArrowUpRight size={17}/></a><a href="#scenarios" className="button secondary">{c.explore}<ArrowRight size={17}/></a></div><div className="hero-meta"><span><Check size={13}/>{zh?'无需注册':'No sign-up needed'}</span><span><ShieldCheck size={13}/>{zh?'输入不上传':'No input uploads'}</span><span><Sparkles size={13}/>{zh?'概念产品演示':'Concept product demo'}</span></div><Demo locale={locale}/><div className="hero-caption"><span>THINK LESS ABOUT THE TOOLS. MORE ABOUT THE POSSIBILITIES.</span><a href="#capabilities" aria-label={zh?'浏览核心能力':'Browse capabilities'}><ArrowDown size={16}/></a></div></div></section><div className="audience-strip"><div className="container"><p>{zh?'为每一个认真创造的人而设计':'Designed for people who care about what they create'}</p><div>{(zh?['创作者','开发者','教育者','分析师','成长中的团队']:['Creators','Developers','Educators','Analysts','Growing teams']).map((x,i)=><span key={x}>{[<FileText key="f"/>,<Braces key="b"/>,<BookOpen key="o"/>,<Search key="s"/>,<Layers3 key="l"/>][i]}{x}</span>)}</div></div></div>
-<Section id="capabilities"><Heading eyebrow={zh?'一个助手，多种可能':'ONE ASSISTANT. MANY POSSIBILITIES.'} title={zh?'不止回答，更能帮你推进。':'More than answers. A way forward.'} description={zh?'把重复工作交给 AI，把注意力留给值得你判断的事情。':'Let AI help with the repetitive parts. Keep your attention on the decisions that matter.'}/><div className="capability-grid">{c.capabilities.map((item,i)=>{const Icon=icons[i];return <article className="capability-card" key={item.title}><span className={`capability-icon icon-${i}`}><Icon size={22}/></span><h3>{item.title}</h3><p>{item.description}</p><span className="card-number">0{i+1}</span></article>;})}</div></Section>
-<Section id="scenarios" className="alternate"><div className="heading-with-note"><Heading eyebrow={zh?'从真实任务出发':'START WITH A REAL TASK'} title={zh?'你的工作，总有新的打开方式。':'Your work. A new way in.'} description={zh?'8 类工作领域，24 个具体场景。找到你的任务，看看 AI 可以从哪里帮起。':'8 areas of work. 24 concrete scenarios. Find your task and a place for AI to help.'}/><div className="big-stat">24<span>{zh?'种工作可能':'ways to work'}</span></div></div><SceneLibrary content={c}/></Section>
-<Section id="features"><Heading eyebrow={zh?'为交付而设计':'DESIGNED FOR THE DELIVERABLE'} title={zh?'好工具，让复杂的事变清晰。':'Good tools make complexity clear.'} description={zh?'从背景资料到输出格式，再到最后的审核，每一步都围绕你的工作展开。':'From references to output formats to final review, every step revolves around your work.'}/><div className="feature-stack">{c.features.map((f,i)=><article className={`feature-row ${i===1?'reverse':''}`} key={f[0]} data-reveal><div className="feature-copy"><span className="feature-index">0{i+1} / FEATURE</span><h3>{f[0]}</h3><p>{f[1]}</p><ul>{f.slice(2).map(v=><li key={v}><Check size={15}/>{v}</li>)}</ul></div><FeatureArt index={i} zh={zh}/></article>)}</div></Section>
-<Section id="workflow" className="alternate"><Heading center eyebrow={zh?'简单开始，持续改进':'START SIMPLE. KEEP REFINING.'} title={zh?'四步，把想法变成成果。':'Four steps from idea to output.'} description={zh?'这是使用流程，不是模型内部原理。清晰上下文、持续反馈与人工审核，是有效协作的关键。':'This is the user workflow, rather than model internals. Clear context, feedback and human review make collaboration work.'}/><ol className="workflow-grid">{c.steps.map((s,i)=><li key={s.title}><div className="step-circle">{[<FileText key="a"/>,<Layers3 key="b"/>,<Sparkles key="c"/>,<ShieldCheck key="d"/>][i]}</div>{i<3&&<ArrowRight className="step-arrow" size={18} aria-hidden="true"/>}<span className="step-number">STEP 0{i+1}</span><h3>{s.title}</h3><p>{s.description}</p></li>)}</ol><div className="workflow-tip"><Zap size={17}/><p>{zh?'试试这个提示结构：目标 + 背景 + 输出格式 + 限制条件。':'Try this prompt structure: goal + context + output format + constraints.'}</p><a href="#demo">{zh?'立即试试':'Try it now'}<ArrowUpRight size={14}/></a></div></Section>
-<Section id="comparison"><Heading eyebrow={zh?'把时间，用在更重要的地方':'MAKE ROOM FOR WHAT MATTERS'} title={zh?'减少准备时间，保留判断时间。':'Less preparation. More perspective.'} description={zh?'下面是示例任务的时间分配估算，用于解释工作方式；不是实测或效果承诺。':'Illustrative task-time estimates explain a workflow, rather than measured results or promised performance.'}/><div className="comparison-grid"><div className="chart-card"><div className="chart-heading"><h3>{zh?'内容任务耗时示意':'Content task time illustration'}</h3><span>{zh?'单位：分钟':'Unit: minutes'}</span></div><div className="chart-legend"><span><i/>{zh?'手动起草':'Manual draft'}</span><span><i/>{zh?'AI 辅助 + 审核':'AI-assisted + review'}</span></div><svg role="img" aria-labelledby="chart-title chart-desc" viewBox="0 0 480 245"><title id="chart-title">{zh?'示例任务耗时对比':'Illustrative task-time comparison'}</title><desc id="chart-desc">{zh?'邮件草稿：手动 20 分钟，辅助并审核 12 分钟；文章大纲：40 与 22 分钟；会议纪要：30 与 18 分钟。':'Email draft: manual 20, assisted and reviewed 12 minutes. Article outline: 40 and 22. Meeting notes: 30 and 18.'}</desc>{[0,10,20,30,40].map(n=><g key={n}><line x1={100+n*8.5} x2={100+n*8.5} y1="10" y2="207" stroke="var(--border)" strokeDasharray="3 5"/><text x={100+n*8.5} y="229" textAnchor="middle" fill="var(--muted)" fontSize="11">{n}</text></g>)}{[[20,12],[40,22],[30,18]].map(([manual,ai],i)=><g key={i}><text x="0" y={38+i*66} fill="var(--muted)" fontSize="12">{(zh?['邮件草稿','文章大纲','会议纪要']:['Email draft','Outline','Meeting notes'])[i]}</text><rect x="100" y={16+i*66} width={manual*8.5} height="17" rx="4" fill="var(--chart-muted)"/><rect x="100" y={39+i*66} width={ai*8.5} height="17" rx="4" fill="var(--accent)"/><text x={108+ai*8.5} y={51+i*66} fill="var(--text)" fontSize="11">{ai}</text></g>)}</svg><p className="section-note">{zh?'示例包含人工审核时间，实际耗时随任务而变。':'Examples include human review. Actual time varies by task.'}</p></div><div className="table-card"><h3>{zh?'不同工具，适合不同任务':'Different tools for different tasks'}</h3><div className="table-scroll"><table><caption className="sr-only">{zh?'工作方式概念对比':'Conceptual comparison of workflows'}</caption><thead><tr><th scope="col">{zh?'任务特点':'Task'}</th><th scope="col">{zh?'传统工具':'Traditional'}</th><th scope="col">{zh?'AI 辅助':'AI-assisted'}</th></tr></thead><tbody>{(zh?[['初稿生成','从空白开始','提供可编辑草稿'],['资料整理','手动归纳','辅助提取要点'],['表达调整','逐段修改','探索多个版本'],['事实核实','需要人工','仍需要人工'],['精确计算','表格 / 程序','交由计算工具'],['最终决策','由人负责','由人负责']]:[['First draft','Start from blank','Editable starting point'],['Organizing sources','Manual synthesis','Assisted extraction'],['Refining tone','Edit line by line','Explore variations'],['Fact verification','Human review','Human review required'],['Exact calculations','Sheets / programs','Use calculation tools'],['Final decision','Human responsibility','Human responsibility']]).map(r=><tr key={r[0]}>{r.map((v,i)=>i===0?<th key={v} scope="row">{v}</th>:<td key={i}>{v}</td>)}</tr>)}</tbody></table></div></div></div></Section>
-<Section id="testimonials" className="alternate"><Heading center eyebrow={zh?'不同角色，共同的期待':'DIFFERENT ROLES. SHARED AMBITIONS.'} title={zh?'好的协作，让人更有创造力。':'Better collaboration. More creativity.'} description={zh?'以下为虚构人物的场景化示例反馈，并非真实客户评价或背书。':'The following scenario-based feedback comes from fictional personas, rather than real customers or endorsements.'}/><div className="testimonial-grid">{(zh?[
- ['初稿不再是最难的一步。我可以把更多时间放在观点与表达的打磨上。','林若','内容创作者','LR'],['解释代码的过程，帮我找到之前忽略的边界条件。最终还是会自己运行测试。','陈翌','前端开发者','CY'],['同一个知识点，可以换几种方式解释。学生的理解情况仍然需要我观察。','苏宁','教育工作者','SN'],['从一张表开始提问，比直接追求一个结论更有帮助。','周墨','数据分析师','ZM'],['让回复先有结构，再补上真实订单细节，工作顺畅了很多。','许安','客户支持专员','XA'],['把访谈里分散的声音整理成主题，团队讨论就有了共同起点。','陆遥','产品经理','LY']
- ]:[['The first draft is no longer the hardest part. I can spend more time refining the ideas and the voice.','Robin Lee','Content creator','RL'],['Explaining the code helped me spot overlooked edge cases. I still run the tests myself.','Alex Chen','Frontend developer','AC'],['One concept, several ways to explain it. Understanding my students still takes my observation.','Sam Wu','Educator','SW'],['Starting with questions about a table is more useful than rushing toward a conclusion.','Morgan Zhou','Data analyst','MZ'],['A structured reply gives me a starting point, then I add the real order details.','Avery Xu','Support specialist','AX'],['Organizing scattered interview notes into themes gave our discussion a common starting point.','Jamie Lu','Product manager','JL']]).map(([quote,name,role,initials],i)=><figure className="quote-card" key={name}><span className="quote-mark" aria-hidden="true">“</span><blockquote>{quote}</blockquote><figcaption><span className={`avatar avatar-${i}`}>{initials}</span><div><strong>{name}</strong><span>{role}</span></div><span className="example-tag">{zh?'示例':'Example'}</span></figcaption></figure>)}</div></Section>
-<Section id="pricing"><Heading center eyebrow={zh?'适合你的节奏':'FIND YOUR OWN PACE'} title={zh?'从一次尝试，到团队协作。':'From a first try to team momentum.'} description={zh?'清晰的概念方案，为不同阶段的工作提供选择。':'Clear concept plans for different stages of your work.'}/><Pricing locale={locale}/></Section>
-<Section id="faq" className="alternate"><div className="faq-layout"><Heading eyebrow={zh?'你可能还想知道':'A FEW MORE THINGS'} title={zh?'好问题，值得清楚回答。':'Good questions deserve clear answers.'} description={zh?'关于产品、演示、数据和使用边界，在这里找到说明。':'Find clear explanations about the product, demo, data and boundaries.'}/><div className="faq-list">{c.faq.map((f,i)=><details key={f.title}><summary><span><span className="faq-number">{String(i+1).padStart(2,'0')}</span>{f.title}</span><ChevronDown size={17}/></summary><p>{f.description}</p></details>)}</div></div></Section>
-<Section className="final-cta"><div className="cta-orb" aria-hidden="true"><Sparkles size={42}/></div><Heading center eyebrow={zh?'下一个好想法，就从这里开始':'YOUR NEXT GOOD IDEA STARTS HERE'} title={zh?'让想法，迈出下一步。':'Give your idea its next step.'} description={zh?'带着一个问题来，带着新的可能离开。':'Bring a question. Leave with a new possibility.'}/><a className="button" href="#demo">{c.cta}<ArrowUpRight size={17}/></a><span className="cta-note">{zh?'免费本地演示 · 无需账号':'Free local demo · No account required'}</span></Section>
-</main><footer className="site-footer"><div className="container"><div className="footer-top"><div><a className="brand" href={`/${locale}`}><span className="brand-mark"><Sparkles size={22}/></span>luma<span className="brand-ai">AI</span></a><p>{zh?'为想法而生，为行动而来。':'Made for ideas. Built for momentum.'}</p></div><div className="footer-links"><div><strong>{zh?'探索产品':'Explore'}</strong><a href="#capabilities">{c.nav[0]}</a><a href="#scenarios">{c.nav[1]}</a><a href="#pricing">{c.nav[3]}</a></div><div><strong>{zh?'了解更多':'Learn more'}</strong><a href="#workflow">{c.nav[2]}</a><a href="#faq">FAQ</a><Link href="/delivery" prefetch={false}>{zh?'交付与工具说明':'Delivery & tools'}</Link></div><div><strong>{zh?'语言':'Language'}</strong><Link href="/zh" hrefLang="zh" prefetch={false}>简体中文</Link><Link href="/en" hrefLang="en" prefetch={false}>English</Link><a href="#main">{zh?'回到顶部':'Back to top'} ↑</a></div></div></div><div className="footer-bottom"><span>© {new Date().getFullYear()} Luma AI. {zh?'概念产品展示。':'Concept product showcase.'}</span><span><ShieldCheck size={13}/>{zh?'示例内容 · 无真实 AI 或支付连接':'Illustrative content · No live AI or payments'}</span></div></div></footer><Reveal/></>;}
+import Link from "next/link";
+import {
+  ArrowDown,
+  ArrowRight,
+  ArrowUpRight,
+  BookOpen,
+  Braces,
+  Check,
+  FileText,
+  Layers3,
+  Search,
+  ShieldCheck,
+  Sparkles,
+} from "lucide-react";
+import type { Content, Locale } from "@/content";
+import { Demo, Reveal, SiteControls } from "./interactive";
+import { Capabilities } from "./sections/capabilities";
+import { Scenarios } from "./sections/scenarios";
+import { Features } from "./sections/features";
+import { WorkflowSection } from "./sections/workflow";
+import { Comparison } from "./sections/comparison";
+import { Testimonials } from "./sections/testimonials";
+import { PricingSection } from "./sections/pricing";
+import { FAQ } from "./sections/faq";
+import { FinalCTA } from "./sections/final-cta";
+export function Landing({
+  locale,
+  content: c,
+}: {
+  locale: Locale;
+  content: Content;
+}) {
+  const zh = c.zh;
+  const ids = ["capabilities", "scenarios", "workflow", "pricing"];
+  return (
+    <>
+      <a href="#main" className="skip-link">
+        {zh ? "跳到主要内容" : "Skip to main content"}
+      </a>
+      <header className="site-header">
+        <div className="container header-inner">
+          <a href={`/${locale}`} className="brand">
+            <span className="brand-mark">
+              <Sparkles size={22} />
+            </span>
+            luma<span className="brand-ai">AI</span>
+          </a>
+          <nav
+            className="desktop-nav"
+            aria-label={zh ? "主导航" : "Main navigation"}
+          >
+            {c.nav.map((n, i) => (
+              <a key={n} href={`#${ids[i]}`}>
+                {n}
+              </a>
+            ))}
+          </nav>
+          <SiteControls locale={locale} nav={c.nav} />
+        </div>
+      </header>
+      <main id="main">
+        <section className="hero">
+          <div className="hero-grid" aria-hidden="true" />
+          <div className="hero-glow glow-one" aria-hidden="true" />
+          <div className="hero-glow glow-two" aria-hidden="true" />
+          <div className="container hero-content">
+            <a href="#features" className="release-badge">
+              <span className="badge-dot" />
+              {zh
+                ? "为想法而生，为行动而来"
+                : "Made for ideas. Built for momentum."}
+              <ArrowRight size={13} />
+            </a>
+            <h1>
+              {c.hero[0]}
+              <br />
+              <span>{c.hero[1]}</span>
+            </h1>
+            <p className="hero-description">{c.hero[2]}</p>
+            <div className="hero-actions">
+              <a href="#demo" className="button">
+                {c.cta}
+                <ArrowUpRight size={17} />
+              </a>
+              <a href="#scenarios" className="button secondary">
+                {c.explore}
+                <ArrowRight size={17} />
+              </a>
+            </div>
+            <div className="hero-meta">
+              <span>
+                <Check size={13} />
+                {zh ? "无需注册" : "No sign-up needed"}
+              </span>
+              <span>
+                <ShieldCheck size={13} />
+                {zh ? "输入不上传" : "No input uploads"}
+              </span>
+              <span>
+                <Sparkles size={13} />
+                {zh ? "概念产品演示" : "Concept product demo"}
+              </span>
+            </div>
+            <Demo locale={locale} />
+            <div className="hero-caption">
+              <span>
+                THINK LESS ABOUT THE TOOLS. MORE ABOUT THE POSSIBILITIES.
+              </span>
+              <a
+                href="#capabilities"
+                aria-label={zh ? "浏览核心能力" : "Browse capabilities"}
+              >
+                <ArrowDown size={16} />
+              </a>
+            </div>
+          </div>
+        </section>
+        <div className="audience-strip">
+          <div className="container">
+            <p>
+              {zh
+                ? "为每一个认真创造的人而设计"
+                : "Designed for people who care about what they create"}
+            </p>
+            <div>
+              {(zh
+                ? ["创作者", "开发者", "教育者", "分析师", "成长中的团队"]
+                : [
+                    "Creators",
+                    "Developers",
+                    "Educators",
+                    "Analysts",
+                    "Growing teams",
+                  ]
+              ).map((x, i) => (
+                <span key={x}>
+                  {
+                    [
+                      <FileText key="f" />,
+                      <Braces key="b" />,
+                      <BookOpen key="o" />,
+                      <Search key="s" />,
+                      <Layers3 key="l" />,
+                    ][i]
+                  }
+                  {x}
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+        <Capabilities locale={locale} content={c} />
+        <Scenarios locale={locale} content={c} />
+        <Features locale={locale} content={c} />
+        <WorkflowSection locale={locale} content={c} />
+        <Comparison locale={locale} content={c} />
+        <Testimonials locale={locale} content={c} />
+        <PricingSection locale={locale} content={c} />
+        <FAQ locale={locale} content={c} />
+        <FinalCTA locale={locale} content={c} />
+      </main>
+      <footer className="site-footer">
+        <div className="container">
+          <div className="footer-top">
+            <div>
+              <a className="brand" href={`/${locale}`}>
+                <span className="brand-mark">
+                  <Sparkles size={22} />
+                </span>
+                luma<span className="brand-ai">AI</span>
+              </a>
+              <p>
+                {zh
+                  ? "为想法而生，为行动而来。"
+                  : "Made for ideas. Built for momentum."}
+              </p>
+            </div>
+            <div className="footer-links">
+              <div>
+                <strong>{zh ? "探索产品" : "Explore"}</strong>
+                <a href="#capabilities">{c.nav[0]}</a>
+                <a href="#scenarios">{c.nav[1]}</a>
+                <a href="#pricing">{c.nav[3]}</a>
+              </div>
+              <div>
+                <strong>{zh ? "了解更多" : "Learn more"}</strong>
+                <a href="#workflow">{c.nav[2]}</a>
+                <a href="#faq">FAQ</a>
+                <Link href="/delivery" prefetch={false}>
+                  {zh ? "交付与工具说明" : "Delivery & tools"}
+                </Link>
+                <a
+                  href="https://github.com/Jiatai-Yang/luma-ai-landing"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  GitHub ↗
+                </a>
+              </div>
+              <div>
+                <strong>{zh ? "语言" : "Language"}</strong>
+                <Link href="/zh" hrefLang="zh" prefetch={false}>
+                  简体中文
+                </Link>
+                <Link href="/en" hrefLang="en" prefetch={false}>
+                  English
+                </Link>
+                <a href="#main">{zh ? "回到顶部" : "Back to top"} ↑</a>
+              </div>
+            </div>
+          </div>
+          <div className="footer-bottom">
+            <span>
+              © {new Date().getFullYear()} Luma AI.{" "}
+              {zh ? "概念产品展示。" : "Concept product showcase."}
+            </span>
+            <span>
+              <ShieldCheck size={13} />
+              {zh
+                ? "示例内容 · 无真实 AI 或支付连接"
+                : "Illustrative content · No live AI or payments"}
+            </span>
+          </div>
+        </div>
+      </footer>
+      <Reveal />
+    </>
+  );
+}

@@ -1,1 +1,9 @@
-export default function Loading(){return <main className="loading-preview" aria-busy="true" aria-label="Loading"><div className="skeleton-title"/><div className="skeleton-line"/><div className="skeleton-window"/></main>;}
+export default function Loading() {
+  return (
+    <main className="loading-preview" aria-busy="true" aria-label="Loading">
+      <div className="skeleton-title" />
+      <div className="skeleton-line" />
+      <div className="skeleton-window" />
+    </main>
+  );
+}
